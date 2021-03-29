@@ -5,11 +5,24 @@ import { MdShoppingBasket } from "react-icons/md";
 import logo from "../../assets/images/logo.svg";
 import { Container, Cart } from "./styles";
 import { useCart } from "../../hooks/useCart";
+interface CartItemsAmount {
+  [key: number]: number;
+}
 
 const Header = (): JSX.Element => {
   const { cart } = useCart();
-  const cartSize = cart.length;
 
+  // let cartItemsAmount = cart.reduce((sumItems, item) => {
+  //   if (item.id in sumItems) {
+  //     sumItems[item.id]++;
+  //   } else {
+  //     sumItems[item.id] = 1;
+  //   }
+  //   return sumItems;
+  // }, {} as CartItemsAmount);
+
+  // const cartSize = Object.keys(cartItemsAmount).length;
+  const cartSize = cart.length;
   return (
     <Container>
       <Link to="/">
