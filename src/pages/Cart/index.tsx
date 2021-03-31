@@ -46,19 +46,19 @@ const Cart = (): JSX.Element => {
 
   return (
     <Container>
-      {cartFormatted.map((product) => (
-        <ProductTable key={product.id}>
-          <thead>
-            <tr>
-              <th aria-label="product image" />
-              <th>PRODUTO</th>
-              <th>QTD</th>
-              <th>SUBTOTAL</th>
-              <th aria-label="delete icon" />
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-testid="product">
+      <ProductTable>
+        <thead>
+          <tr>
+            <th aria-label="product image" />
+            <th>PRODUTO</th>
+            <th>QTD</th>
+            <th>SUBTOTAL</th>
+            <th aria-label="delete icon" />
+          </tr>
+        </thead>
+        <tbody>
+          {cartFormatted.map((product) => (
+            <tr data-testid="product" key={product.id}>
               <td>
                 <img src={product.image} alt={product.title} />
               </td>
@@ -104,9 +104,9 @@ const Cart = (): JSX.Element => {
                 </button>
               </td>
             </tr>
-          </tbody>
-        </ProductTable>
-      ))}
+          ))}
+        </tbody>
+      </ProductTable>
 
       <footer>
         <button type="button">Finalizar pedido</button>
