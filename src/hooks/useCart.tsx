@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
 import { api } from "../services/api";
 import { Product, Stock } from "../types";
@@ -23,12 +29,11 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem("@RocketShoes:cart");
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
-
+    if (storagedCart) {
+      return JSON.parse(storagedCart);
+    }
     return [];
   });
 
@@ -45,17 +50,24 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       });
 
       if (isProductCart) {
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
+
         setCart(newCart);
       } else {
         const response = await api.get("products");
         const [productToAdd] = response.data.filter((product: Product) => {
           return product.id === productId;
         });
-
+        console.log(productToAdd);
         const cartItem = {
           ...productToAdd,
           amount: 1,
         };
+        localStorage.setItem(
+          "@RocketShoes:cart",
+          JSON.stringify([...cart, cartItem])
+        );
+
         setCart([...cart, cartItem]);
       }
     } catch {
@@ -65,7 +77,13 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
+      const updatedCart = cart.filter((product) => {
+        if (product.id === productId) {
+          return false;
+        }
+        return product;
+      });
+      setCart(updatedCart);
     } catch {
       // TODO
     }
@@ -76,7 +94,13 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      const updatedCart = cart.map((product) => {
+        if (product.id === productId) {
+          product.amount = amount;
+        }
+        return product;
+      });
+      setCart(updatedCart);
     } catch {
       // TODO
     }
